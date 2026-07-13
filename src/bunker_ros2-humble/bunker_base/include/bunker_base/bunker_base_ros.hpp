@@ -35,6 +35,7 @@ class BunkerBaseRos : public rclcpp::Node {
   bool is_bunker_mini_ = false;
   // bool is_omni_wheel_ = false;
 
+  bool publish_tf_ = true;
   bool simulated_robot_ = false;
   int sim_control_rate_ = 50;
 

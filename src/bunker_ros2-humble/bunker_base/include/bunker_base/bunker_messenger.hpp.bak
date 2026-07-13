@@ -40,7 +40,6 @@ class BunkerMessenger {
   void SetOdometryFrame(std::string frame) { odom_frame_ = frame; }
   void SetBaseFrame(std::string frame) { base_frame_ = frame; }
   void SetOdometryTopicName(std::string name) { odom_topic_name_ = name; }
-  void SetPublishTF(bool publish_tf) { publish_tf_ = publish_tf; }
 
   void SetSimulationMode(int loop_rate) {
     simulated_robot_ = true;
@@ -151,7 +150,6 @@ class BunkerMessenger {
   std::string base_frame_;
   std::string odom_topic_name_;
 
-  bool publish_tf_ = true;
   bool simulated_robot_ = false;
   int sim_control_rate_ = 50;
 
@@ -231,9 +229,7 @@ class BunkerMessenger {
     tf_msg.transform.translation.z = 0.0;
     tf_msg.transform.rotation = odom_quat;
 
-    if (publish_tf_) {
-      tf_broadcaster_->sendTransform(tf_msg);
-    }
+    tf_broadcaster_->sendTransform(tf_msg);
 
     // publish odometry and tf messages
     nav_msgs::msg::Odometry odom_msg;
