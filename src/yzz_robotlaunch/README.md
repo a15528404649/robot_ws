@@ -2,11 +2,11 @@
 
 `yzz_robotlaunch` 是 BUNKER MINI 机器人整车集成与启动配置包。
 
-这个包不负责底盘、雷达或 IMU 的底层驱动，而是把现有功能包统一组织起来，方便后续实现建图、定位和自主导航。
+这个包不负责底盘、雷达或 IMU 的底层驱动，而是把现有功能包统一组织起来，提供机器人基础启动、建图与导航的一键启动命令。
 
 ## 主要用途
 
-该包后续用于统一管理：
+该包负责统一启动：
 
 - BUNKER MINI 底盘驱动
 - IMU 驱动
@@ -16,14 +16,12 @@
 - robot_localization EKF 融合
 - slam_toolbox 建图
 - Nav2 定位与导航
-- RViz 显示配置
-- 地图文件
 
 ## 依赖的现有功能包
 
 当前机器人工作空间中已有：
 
-- `bunker_base`
+- `yzz_bunker_mini_base`
   - 底盘驱动
   - 发布 `/odom`
   - 接收 `/cmd_vel`
@@ -61,22 +59,20 @@
 
 ```text
 yzz_robotlaunch/
-├── config/
-│   ├── ekf.yaml
-│   ├── slam_toolbox.yaml
-│   └── nav2_params.yaml
 ├── launch/
 │   ├── robot_bringup.launch.py
-│   ├── localization.launch.py
-│   ├── mapping.launch.py
-│   └── navigation.launch.py
-├── maps/
-│   ├── map.yaml
-│   └── map.pgm
-├── rviz/
-│   └── bunker_mini.rviz
+│   ├── mapping_system.launch.py
+│   └── navigation_system.launch.py
 ├── yzz_robotlaunch/
+│   ├── __init__.py
+│   └── navigation_gate.py
+├── resource/
+│   └── yzz_robotlaunch
 ├── package.xml
 ├── setup.py
 ├── setup.cfg
 └── README.md
+```
+
+导航参数与地图位于 `yzz_navigation2`；机器人模型和 RViz 配置位于 `yzz_decription`。
+这样该包只承担“整车方案启动”的职责。
