@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"
+       name="bunker_mini">
+
+  <!-- ========================= -->
+  <!-- 机器人主要尺寸，单位：米 -->
+  <!-- ========================= -->
+  <xacro:property name="robot_length" value="0.690"/>
+  <xacro:property name="robot_width" value="0.570"/>
+  <xacro:property name="robot_height" value="0.335"/>
+
+  <!-- base_link 位于整车外形几何中心 -->
+  <xacro:property name="base_link_height" value="0.1675"/>
+
+  <!-- 雷达尺寸 -->
+  <xacro:property name="lidar_radius" value="0.035"/>
+  <xacro:property name="lidar_height" value="0.035"/>
+
+  <!-- ========================= -->
+  <!-- 地面投影坐标系 -->
+  <!-- ========================= -->
+  <link name="base_footprint"/>
+
+  <!-- ========================= -->
+  <!-- 机器人主体 -->
+  <!-- ========================= -->
+  <link name="base_link">
+
+    <inertial>
+      <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+      <mass value="40.9538"/>
+
+      <inertia
+        ixx="0.428867"
+        ixy="0"
+        ixz="-0.028129"
+        iyy="1.227456"
+        iyz="0"
+        izz="1.379300"/>
+    </inertial>
+
+    <visual>
+      <!--
+        原始 STL 几何中心不在坐标原点，
+        这里将模型移动到新的 base_link 中心附近
+      -->
+      <origin xyz="-0.01309 0 0.10884" rpy="0 0 0"/>
+
+      <geometry>
+        <mesh filename="package://yzz_decription/meshes/base_link.STL"/>
+      </geometry>
+
+      <material name="bunker_gray">
+        <color rgba="0.35 0.35 0.35 1.0"/>
+      </material>
+    </visual>
+
+    <!--
+      使用稍微放大的长方体作为碰撞模型。
+      这样比直接使用高面数 STL 更稳定、更保守。
+    -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+
+      <geometry>
+        <box size="0.700 0.580 0.335"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <!-- base_footprint 在地面，base_link 在整车中心 -->
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${base_link_height}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========================= -->
+  <!-- 激光雷达 -->
+  <!-- 正上方、靠前安装 -->
+  <!-- ========================= -->
+  <link name="laser_link">
+
+    <visual>
+      <!-- laser_link 原点近似放在雷达扫描平面 -->
+      <origin xyz="0 0 -0.0175" rpy="0 0 0"/>
+
+      <geometry>
+        <cylinder radius="${lidar_radius}"
+                  length="${lidar_height}"/>
+      </geometry>
+
+      <material name="lidar_black">
+        <color rgba="0.05 0.05 0.05 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 -0.0175" rpy="0 0 0"/>
+
+      <geometry>
+        <cylinder radius="${lidar_radius}"
+                  length="${lidar_height}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 -0.0175" rpy="0 0 0"/>
+      <mass value="0.2"/>
+
+      <inertia
+        ixx="0.00005"
+        ixy="0"
+        ixz="0"
+        iyy="0.00005"
+        iyz="0"
+        izz="0.00010"/>
+    </inertial>
+
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+
+    <!-- +X 是机器人前方 -->
+    <origin xyz="0.20 0 0.190" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========================= -->
+  <!-- IMU：机器人中心正上方 -->
+  <!-- ========================= -->
+  <link name="imu_link"/>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0.190" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========================= -->
+  <!-- GPS：机器人中心正上方 -->
+  <!-- ========================= -->
+  <link name="gps_link"/>
+
+  <joint name="gps_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="gps_link"/>
+    <origin xyz="0 0 0.230" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========================= -->
+  <!-- 相机预留：机器人中心正上方 -->
+  <!-- ========================= -->
+  <link name="camera_link"/>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0 0 0.250" rpy="0 0 0"/>
+  </joint>
+
+</robot>
