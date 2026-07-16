@@ -17,7 +17,7 @@ def generate_launch_description():
             ])
         ),
         launch_arguments={
-            'map': '/home/orin/robot_ws/src/yzz_navigation2/maps/bunker_map.yaml',
+            'map': PathJoinSubstitution([FindPackageShare('yzz_navigation2'), 'maps', 'bunker_map.yaml']),
             'params_file': PathJoinSubstitution([FindPackageShare('yzz_navigation2'), 'config', 'nav2', 'nav2_params.yaml']),
             'use_sim_time': 'false',
             'autostart': 'true',

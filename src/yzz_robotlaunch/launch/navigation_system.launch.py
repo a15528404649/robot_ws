@@ -15,7 +15,7 @@ def generate_launch_description():
     map_file = LaunchConfiguration("map")
     map_arg = DeclareLaunchArgument(
         "map",
-        default_value="/home/orin/robot_ws/src/yzz_navigation2/maps/bunker_map.yaml",
+        default_value=PathJoinSubstitution([FindPackageShare('yzz_navigation2'), 'maps', 'bunker_map.yaml']),
         description="Path to the map yaml file"
     )
 
