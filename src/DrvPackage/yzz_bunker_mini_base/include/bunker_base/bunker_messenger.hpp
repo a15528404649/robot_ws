@@ -20,8 +20,8 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
-#include "bunker_msgs/msg/bunker_status.hpp"
-#include "bunker_msgs/msg/bunker_rc_state.hpp"
+#include "yzz_bunker_mini_base/msg/bunker_status.hpp"
+#include "yzz_bunker_mini_base/msg/bunker_rc_state.hpp"
 
 #include "ugv_sdk/mobile_robot/bunker_robot.hpp"
 #include "ugv_sdk/utilities/protocol_detector.hpp"
@@ -51,16 +51,16 @@ class BunkerMessenger {
     // odometry publisher
     odom_pub_ =
         node_->create_publisher<nav_msgs::msg::Odometry>(odom_topic_name_, 50);
-    status_pub_ = node_->create_publisher<bunker_msgs::msg::BunkerStatus>(
+    status_pub_ = node_->create_publisher<yzz_bunker_mini_base::msg::BunkerStatus>(
         "/bunker_status", 10);
-    rc_status_pub_ = node_->create_publisher<bunker_msgs::msg::BunkerRCState>(
+    rc_status_pub_ = node_->create_publisher<yzz_bunker_mini_base::msg::BunkerRCState>(
         "/bunker_rc_state",10);
     // cmd subscriber
     motion_cmd_sub_ = node_->create_subscription<geometry_msgs::msg::Twist>(
         "/cmd_vel", 5,
         std::bind(&BunkerMessenger::TwistCmdCallback, this,
                   std::placeholders::_1));
-    // light_cmd_sub_ = node_->create_subscription<bunker_msgs::msg::BunkerLightCmd>(
+    // light_cmd_sub_ = node_->create_subscription<yzz_bunker_mini_base::msg::BunkerLightCmd>(
     //     "/light_control", 5,
     //     std::bind(&BunkerMessenger::LightCmdCallback, this,
     //               std::placeholders::_1));
@@ -82,8 +82,8 @@ class BunkerMessenger {
     auto state = bunker_->GetRobotState();
 
     // publish bunker state message
-    bunker_msgs::msg::BunkerStatus status_msg;
-    bunker_msgs::msg::BunkerRCState rc_state_msg;
+    yzz_bunker_mini_base::msg::BunkerStatus status_msg;
+    yzz_bunker_mini_base::msg::BunkerRCState rc_state_msg;
     status_msg.header.stamp = current_time_;
 
     status_msg.linear_velocity = state.motion_state.linear_velocity;
@@ -159,11 +159,11 @@ class BunkerMessenger {
   geometry_msgs::msg::Twist current_twist_;
 
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
-  rclcpp::Publisher<bunker_msgs::msg::BunkerStatus>::SharedPtr status_pub_;
-  rclcpp::Publisher<bunker_msgs::msg::BunkerRCState>::SharedPtr rc_status_pub_;
+  rclcpp::Publisher<yzz_bunker_mini_base::msg::BunkerStatus>::SharedPtr status_pub_;
+  rclcpp::Publisher<yzz_bunker_mini_base::msg::BunkerRCState>::SharedPtr rc_status_pub_;
 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr motion_cmd_sub_;
-  // rclcpp::Subscription<bunker_msgs::msg::BunkerLightCmd>::SharedPtr
+  // rclcpp::Subscription<yzz_bunker_mini_base::msg::BunkerLightCmd>::SharedPtr
       // light_cmd_sub_;
 
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

@@ -22,7 +22,7 @@ source ~/robot_ws/install/setup.bash
 ```text
 ~/robot_ws/src/
 ├── DrvPackage/                         # 驱动包
-│   ├── yzz_bunker_mini_base/            # 底盘驱动、bunker_msgs、ugv_sdk
+│   ├── yzz_bunker_mini_base/            # 底盘 ROS2 驱动、消息接口、内部 UGV SDK
 │   ├── yzz_imu/                         # WIT IMU 驱动
 │   └── yzz_lidar/                       # YDLidar 驱动与 scan_sanitizer
 ├── FuncPackage/                         # 功能包
@@ -37,9 +37,10 @@ source ~/robot_ws/install/setup.bash
 
 ### yzz_bunker_mini_base
 
-- 路径：`src/DrvPackage/yzz_bunker_mini_base/yzz_bunker_mini_base`
-- 底盘 CAN 驱动，发布里程计、接收 `/cmd_vel`。
-- 同级 `bunker_msgs` 和 `ugv_sdk` 是底盘驱动的支持包，不要随意移动或修改。
+- 路径：`src/DrvPackage/yzz_bunker_mini_base`
+- 单一 ROS2 底盘驱动包，发布里程计、接收 `/cmd_vel`。
+- `msg/` 与 `launch/` 同级，生成 `yzz_bunker_mini_base/msg/*` 消息接口。
+- `src/ugv_sdk/` 是主包内部 C++ SDK，不是独立 ROS 包；不要单独用 colcon 编译它。
 - CAN 接口为 `can_usb`，波特率为 `500000`。
 
 ### yzz_imu
