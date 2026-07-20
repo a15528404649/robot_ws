@@ -6,7 +6,8 @@ package_name = 'yzz_imu'
 setup(
     name=package_name,
     version='0.1.0',
-    packages=find_packages(exclude=['test']),
+    package_dir={'': 'src'},
+    packages=find_packages(where='src', exclude=['test']),
     data_files=[
         (
             'share/ament_index/resource_index/packages',
@@ -31,7 +32,7 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            'yzz_imu = yzz_imu.yzz_imu:main',
+            'yzz_imu = yzz_imu_driver.driver:main',
         ],
     },
 )

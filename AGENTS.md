@@ -47,6 +47,7 @@ source ~/robot_ws/install/setup.bash
 
 - 路径：`src/DrvPackage/yzz_imu`
 - WIT IMU 串口驱动，发布 `/imu/data`，坐标系为 `imu_link`。
+- Python 源码位于 `src/yzz_imu_driver/driver.py`；ROS 可执行名仍为 `yzz_imu`。
 - 单独启动：`ros2 launch yzz_imu rviz_and_imu.launch.py`
 
 ### yzz_lidar
