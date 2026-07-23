@@ -1,0 +1,8 @@
+battery_adapter:
+  ros__parameters:
+    status_topic: /bunker_status
+    battery_topic: /battery_state
+    empty_voltage: 24.0
+    low_voltage: 25.0
+    low_percentage: 15.0
+    full_voltage: 29.4

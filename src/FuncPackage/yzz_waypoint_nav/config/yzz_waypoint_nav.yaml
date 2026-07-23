@@ -1,0 +1,12 @@
+waypoint_nav_node:
+  ros__parameters:
+    # 0 means every waypoint in the selected route.  The ROS1-compatible
+    # parameter spelling is retained for deployments that set it externally.
+    potrol_points_num: 0
+    rest_time: 3.0
+    keep_patrol: false
+    random_patrol: false
+    patrol_type: 0
+    patrol_loop: 1
+    patrol_time: 5.0
+    goal_timeout: 300.0

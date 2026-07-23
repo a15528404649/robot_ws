@@ -1,0 +1,6 @@
+/**:
+  ros__parameters:
+    device.server_ip_port: 43.138.191.89:7201
+    device.register_number: default_reg
+    websocket_enabled: false
+    websocket_heartbeat_sec: 30.0

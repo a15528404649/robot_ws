@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>YZZ 机器人控制台</title><link rel="stylesheet" href="/style.css"></head>
+<body class="dashboard-page">
+<header class="dashboard-header">
+  <div class="header-brand"><div class="mini-mark">Y</div><div><strong>YZZ 机器人控制台</strong><span>建图 · 导航 · 多点巡航</span></div></div>
+  <div class="header-actions"><span id="connection" class="badge offline">连接中</span><button id="logout" class="quiet-button">退出登录</button></div>
+</header>
+<main class="dashboard-main">
+  <section class="map-workspace">
+    <div class="map-topbar"><div><h1>实时地图</h1><p id="map-status">等待 ROS 地图数据</p></div><div id="tool-group" class="tool-group"><button data-tool="view" class="tool active">查看</button><button data-tool="initial" class="tool">初始位姿</button><button data-tool="goal" class="tool">2D Goal</button><button data-tool="navigation" class="tool accent">Navigation Goal</button><button data-tool="waypoint" class="tool waypoint-tool">添加航点</button><button id="fit-map" class="tool">适配全图</button></div></div>
+    <div class="canvas-shell"><canvas id="map" width="900" height="700"></canvas><div id="map-empty" class="map-empty"><b>地图尚未生成</b><span>启动建图系统后，这里将显示实时地图。</span></div></div>
+    <div class="map-help"><span id="map-tip">当前为查看模式</span><span>查看模式：左键拖动平移，滚轮缩放</span></div>
+  </section>
+  <aside class="control-panel">
+    <section class="status-card"><div class="section-title"><h2>运行状态</h2><span id="mode-chip" class="mode-chip">未知</span></div><div class="status-grid"><div><span>定位</span><b id="pose">等待中</b></div><div><span>遥控</span><b id="teleop-status">等待中</b></div><div><span>巡逻</span><b id="waypoint-status">等待中</b></div><div><span>当前航点</span><b id="waypoint-progress">—</b></div></div><p id="message" class="message">已登录到机器人本地控制台。</p></section>
+    <section class="control-card"><div class="section-title"><h2>建图</h2><span>SLAM Toolbox</span></div><button id="start-mapping" class="primary-button">启动建图系统</button><div class="input-row"><input id="save-name" maxlength="64" placeholder="地图名称，例如 office_01"><button id="save-map">保存</button></div><button id="stop-system" class="danger-button">停止本网页启动的系统</button></section>
+    <section class="control-card"><div class="section-title"><h2>导航</h2><button id="refresh-maps" class="text-button">刷新地图</button></div><label class="field-label" for="nav-map-select">选择已保存地图</label><select id="nav-map-select"><option value="">正在读取地图列表…</option></select><button id="start-navigation" class="primary-button">用所选地图启动导航</button><p class="hint">启动后先选择“初始位姿”并在地图拖拽；定位成功后，才可发送导航或巡逻任务。</p></section>
+    <section class="control-card waypoint-card"><div class="section-title"><h2>多点巡航</h2><button id="refresh-routes" class="text-button">刷新路线</button></div><label class="field-label" for="route-select">已保存路线</label><select id="route-select"><option value="">请先选择地图</option></select><div class="input-row"><input id="route-name" maxlength="64" placeholder="路线名称，例如 daily_patrol"><button id="load-route">载入</button></div><div class="route-actions"><button id="save-route">保存当前航点</button><button id="clear-route">清空航点</button><button id="delete-route" class="danger-lite">删除路线</button></div><div class="route-actions patrol-actions"><button id="start-patrol" class="primary-button">开始巡逻</button><button id="pause-patrol">暂停</button><button id="resume-patrol">继续</button><button id="stop-patrol" class="danger-lite">停止</button></div><p class="hint">选择“添加航点”后，在地图拖拽确定位置和朝向；保存后可下次直接复用。路线必须属于当前选择的地图。</p></section>
+    <section class="control-card teleop-card"><div class="section-title"><h2>建图遥控</h2><span class="live-dot">实时</span></div><div id="teleop" class="teleop-pad"><button class="teleop-key forward" data-linear="0.20" data-angular="0">▲</button><button class="teleop-key left" data-linear="0" data-angular="0.70">◀</button><button class="teleop-key stop" data-linear="0" data-angular="0">■</button><button class="teleop-key right" data-linear="0" data-angular="-0.70">▶</button><button class="teleop-key back" data-linear="-0.20" data-angular="0">▼</button></div><p class="hint">按住方向键或键盘 W/A/S/D 控制；松开即停。导航运行时遥控自动锁定。</p></section>
+  </aside>
+</main>
+<script src="/app.js"></script>
+</body></html>

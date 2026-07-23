@@ -1,0 +1,9 @@
+yzz_ptz_camera:
+  ros__parameters:
+    device: /dev/video0
+    pan_step: 18000
+    tilt_step: 7200
+    zoom_step: 100
+    image_width: 320
+    image_height: 240
+    image_fps: 10.0

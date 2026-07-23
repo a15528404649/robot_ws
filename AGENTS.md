@@ -24,8 +24,11 @@ source ~/robot_ws/install/setup.bash
 ├── DrvPackage/                         # 驱动包
 │   ├── yzz_bunker_mini_base/            # 底盘 ROS2 驱动、消息接口、内部 UGV SDK
 │   ├── yzz_imu/                         # WIT IMU 驱动
-│   └── yzz_lidar/                       # YDLidar 驱动与 scan_sanitizer
+│   ├── yzz_lidar/                       # YDLidar 驱动与 scan_sanitizer
+│   └── yzz_gps/                         # GPS 串口驱动（室外导航数据源）
 ├── FuncPackage/                         # 功能包
+│   ├── yzz_battery_adapter/              # 底盘电压到通用电池状态的适配
+│   ├── yzz_ptz_camera/                  # 免驱 PTZ 相机功能包
 │   ├── yzz_decription/                  # URDF、STL、静态 TF、RViz 模型配置
 │   └── yzz_navigation2/                 # EKF、SLAM、Nav2 参数与地图
 └── yzz_robotlaunch/                     # 方案启动包
@@ -55,6 +58,35 @@ source ~/robot_ws/install/setup.bash
 - 路径：`src/DrvPackage/yzz_lidar`
 - YDLidar 驱动发布原始扫描；其中 `scan_sanitizer` 将 `/scan_raw` 重采样后发布为 `/scan`。
 - 雷达设备使用 `/dev/ydlidar`。
+
+### yzz_gps
+
+- 路径：`src/DrvPackage/yzz_gps`
+- GPS 串口驱动，设备为 `/dev/gps_usb`，波特率为 `115200`，传感器坐标系为 `gps_link`。
+- 发布：`/gps/fix`（`sensor_msgs/NavSatFix`）、`/gps/vel`（有效 RMC 时）和 `/gps/nmea`。
+- 单独启动：`ros2 launch yzz_gps gps_driver.launch.py`。
+- 在室内，`/gps/fix` 的 `status: -1` 和经纬度 `NaN` 表示尚未取得卫星定位；移至室外、天线无遮挡后应取得有效坐标。
+- 当前室内建图/AMCL 导航仍使用现有里程计和激光定位，尚未与 GPS 融合；GPS-IMU 室外融合模式须在室外确认有效定位后再单独配置，以避免与 AMCL 的 `map -> odom` 冲突。
+
+### yzz_battery_adapter
+
+- 路径：`src/FuncPackage/yzz_battery_adapter`
+- 将底盘 `/bunker_status` 的电压转换为 `/battery_state`（`yzz_msgs/Battery`），供状态上报和网页功能使用。
+- 不参与底盘控制、建图或导航；百分比基于电压曲线估算，不是 BMS 直接提供的 SOC。
+
+### yzz_ptz_camera
+
+- 路径：`src/FuncPackage/yzz_ptz_camera`
+- 通过系统 V4L2/UVC 接口使用免驱 PTZ 相机，发布 `usb_cam/image_raw`，并提供 `/SetHolder`、`/GetHolder` 云台控制接口。
+- 虽归入功能包，仍依赖实际 `/dev/video*` 相机设备及其访问权限。
+
+### yzz_waypoint_nav
+
+- 路径：`src/FuncPackage/yzz_waypoint_nav`
+- 运行在 Orin 上的 Nav2 多点巡航执行器；不直接发布 `/cmd_vel`，只逐点调用 Nav2 的 `navigate_to_pose` Action。
+- 航点路线属于地图，运行数据保存到 `~/robot_ws/data/waypoints/<地图名>/<路线名>.json`，不写入 ROS 包源码。
+- 保留 ROS1 巡逻参数：`rest_time`、`keep_patrol`、`random_patrol`、`patrol_type`、`patrol_loop`、`patrol_time`、`potrol_points_num`。其中 `potrol_points_num=0` 表示使用路线全部航点。
+- 由 `yzz_web_mapping` 启动；空闲时不会发导航目标。加载地图并设置初始位姿后，才可从网页开始巡逻。
 
 ### yzz_decription
 
@@ -97,6 +129,18 @@ ros2 launch yzz_robotlaunch robot_bringup.launch.py
 
 启动底盘、IMU、雷达、`robot_state_publisher`、EKF 和 `scan_sanitizer`。
 
+### GPS 驱动测试
+
+```bash
+ros2 launch yzz_gps gps_driver.launch.py
+```
+
+另开终端检查：
+
+```bash
+ros2 topic echo /gps/fix
+```
+
 ### 一键建图
 
 ```bash
@@ -136,3 +180,12 @@ ros2 launch yzz_robotlaunch navigation_system.launch.py \
 - 修改包名或移动包目录后，检查 `package.xml`、`setup.py`/`CMakeLists.txt`、launch 引用和地图路径。
 - 当前导航默认地图通过 `FindPackageShare("yzz_navigation2")` 自动定位，不依赖工作空间中的旧绝对路径。
 - `yzz_camera` 尚未加入工作空间；以后加入时归入 `src/DrvPackage/`。
+- Jetson 内核升级后，CH340 的 `ch341` 外部内核模块需要按新内核版本重新编译并安装，否则 `/dev/gps_usb` 不会出现。
+
+### yzz_web_mapping
+
+- Path: `src/FuncPackage/yzz_web_mapping`.
+- Local-LAN web console; it does not modify or auto-start the existing mapping/navigation launch files.
+- Start: `ros2 launch yzz_web_mapping web_mapping.launch.py`; open `http://<Orin-IP>:8080` from Windows.
+- It can start existing mapping/navigation launch files, save maps, publish initial poses and goals. Web teleoperation is disabled by default; explicitly use `allow_teleop:=true` to enable it.
+- Saved maps use `src/FuncPackage/yzz_navigation2/maps/`, the same directory used by the existing navigation system.

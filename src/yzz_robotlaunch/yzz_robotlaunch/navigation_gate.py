@@ -13,17 +13,23 @@ class NavigationGate(Node):
 
     def __init__(self):
         super().__init__('navigation_gate')
+        self._setup_interfaces()
+        self._started = False
+        self._start_gate_timer()
+        self.get_logger().info(
+            'Waiting for map -> base_link before starting Nav2 navigation'
+        )
+
+    def _setup_interfaces(self):
         self._tf_buffer = Buffer()
         self._tf_listener = TransformListener(self._tf_buffer, self)
         self._client = self.create_client(
             ManageLifecycleNodes,
             '/lifecycle_manager_navigation/manage_nodes',
         )
-        self._started = False
+
+    def _start_gate_timer(self):
         self._timer = self.create_timer(0.5, self._try_start_navigation)
-        self.get_logger().info(
-            'Waiting for map -> base_link before starting Nav2 navigation'
-        )
 
     def _try_start_navigation(self):
         if self._started:

@@ -1,0 +1,2 @@
+nav_msgs/MapMetaData metadata
+std_msgs/Float32MultiArray statistics

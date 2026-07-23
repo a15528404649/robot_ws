@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>yzz_battery_adapter</name>
+  <version>0.1.0</version>
+  <description>Converts Bunker Mini voltage status to the legacy YZZ battery topic.</description>
+  <maintainer email="orin@example.com">orin</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>yzz_bunker_mini_base</exec_depend>
+  <exec_depend>yzz_msgs</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

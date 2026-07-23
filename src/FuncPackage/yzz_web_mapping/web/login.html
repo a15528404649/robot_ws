@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录 | YZZ 机器人控制台</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <div class="brand-mark" aria-hidden="true"><span>Y</span><i></i></div>
+    <p class="eyebrow">YZZ ROBOTICS</p>
+    <h1>机器人控制台</h1>
+    <p class="login-intro">登录后可使用建图、地图管理与导航功能。</p>
+    <form id="login-form">
+      <label for="username">账号</label>
+      <input id="username" autocomplete="username" placeholder="请输入账号" required autofocus>
+      <label for="password">密码</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="请输入密码" required>
+      <button class="login-button" type="submit">进入控制台 <span>→</span></button>
+    </form>
+    <p id="login-message" class="login-message" role="alert"></p>
+    <p class="login-footer">局域网安全访问 · Orin ROS 2</p>
+  </main>
+  <script src="/login.js"></script>
+</body>
+</html>

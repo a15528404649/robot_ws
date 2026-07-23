@@ -1,0 +1,9 @@
+gps_driver:
+  ros__parameters:
+    port: /dev/gps_usb
+    baud: 115200
+    frame_id: gps_link
+    fix_topic: /gps/fix
+    velocity_topic: /gps/vel
+    nmea_topic: /gps/nmea
+    compatibility_topic: /gps

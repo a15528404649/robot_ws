@@ -7,10 +7,17 @@ from sensor_msgs.msg import LaserScan
 
 
 class ScanSanitizer(Node):
+    """Resample raw lidar scans to the fixed navigation scan layout."""
 
     def __init__(self):
         super().__init__('scan_sanitizer')
+        self._configure_output_layout()
+        self._setup_interfaces()
+        self.get_logger().info(
+            '固定重采样已启动：/scan_raw -> /scan，1980 points'
+        )
 
+    def _configure_output_layout(self):
         self.output_points = 1980
         self.output_angle_min = -math.pi
         self.output_angle_max = math.pi
@@ -18,21 +25,17 @@ class ScanSanitizer(Node):
             self.output_angle_max - self.output_angle_min
         ) / (self.output_points - 1)
 
+    def _setup_interfaces(self):
         self.subscription = self.create_subscription(
             LaserScan,
             '/scan_raw',
             self.scan_callback,
             10,
         )
-
         self.publisher = self.create_publisher(
             LaserScan,
             '/scan',
             10,
-        )
-
-        self.get_logger().info(
-            '固定重采样已启动：/scan_raw -> /scan，1980 points'
         )
 
     def scan_callback(self, msg):

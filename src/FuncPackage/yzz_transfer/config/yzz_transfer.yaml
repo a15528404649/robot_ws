@@ -1,0 +1,19 @@
+/**:
+  ros__parameters:
+    freq_status_report: 0.33
+    freq_result_upload: 1.0
+    freq_thdata_upload: 0.1
+    data_threshold: 10
+    network_interface: wlan0
+    ip_port: 43.138.191.89:7201
+    http_enabled: false
+    http_timeout: 30.0
+    device.series_number: 未知
+    device.register_number: default_reg
+    device.type: 未知
+    device.model: 未知
+    device.name: 未知
+    device.battery_capacity: 未知
+    device.run_model: 未知
+    device.soft_version: 未知
+    device.StatusCode: 未知

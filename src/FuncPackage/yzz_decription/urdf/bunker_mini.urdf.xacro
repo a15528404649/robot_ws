@@ -17,6 +17,13 @@
   <xacro:property name="lidar_radius" value="0.035"/>
   <xacro:property name="lidar_height" value="0.035"/>
 
+  <!-- 中部凹槽内的主控箱，长度沿机器人前后 X 轴。 -->
+  <xacro:property name="electronics_box_length" value="0.380"/>
+  <xacro:property name="electronics_box_width" value="0.215"/>
+  <xacro:property name="electronics_box_height" value="0.150"/>
+  <!-- 箱体底面相对 base_link 的安装高度。 -->
+  <xacro:property name="electronics_box_bottom_z" value="0.125"/>
+
   <!-- ========================= -->
   <!-- 地面投影坐标系 -->
   <!-- ========================= -->
@@ -53,6 +60,17 @@
 
       <material name="bunker_gray">
         <color rgba="0.35 0.35 0.35 1.0"/>
+      </material>
+    </visual>
+
+    <!-- 主控箱外观：先只建模箱体本身，不推测底板与凹槽支撑结构。 -->
+    <visual name="electronics_box_visual">
+      <origin xyz="0 0 ${electronics_box_bottom_z + electronics_box_height / 2.0}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${electronics_box_length} ${electronics_box_width} ${electronics_box_height}"/>
+      </geometry>
+      <material name="electronics_box_blue">
+        <color rgba="0.10 0.35 0.85 1.0"/>
       </material>
     </visual>
 
@@ -125,8 +143,9 @@
     <parent link="base_link"/>
     <child link="laser_link"/>
 
-    <!-- +X 是机器人前方 -->
-    <origin xyz="0.20 0 0.190" rpy="0 0 0"/>
+    <!-- 雷达本体位于箱体上表面、靠近车头；线缆朝车尾。 -->
+    <origin xyz="0.140 0 ${electronics_box_bottom_z + electronics_box_height + lidar_height}"
+            rpy="0 0 3.141592653589793"/>
   </joint>
 
   <!-- ========================= -->
@@ -148,7 +167,7 @@
   <joint name="gps_joint" type="fixed">
     <parent link="base_link"/>
     <child link="gps_link"/>
-    <origin xyz="0 0 0.230" rpy="0 0 0"/>
+    <origin xyz="0 0 0.1675" rpy="0 0 0"/>
   </joint>
 
   <!-- ========================= -->
