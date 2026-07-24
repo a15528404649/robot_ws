@@ -43,7 +43,7 @@ class HttpTransmitter(Node):
         if not self.get_parameter("http_enabled").value:
             self.get_logger().warning("HTTP transmission is disabled; message was not sent", throttle_duration_sec=30.0)
             return None
-        url = f"http://{self.get_parameter(ip_port).value}{path}"
+        url = f"http://{self.get_parameter("ip_port").value}{path}"
         request = urllib.request.Request(url, data=payload.data.encode("utf-8"), headers={"Content-Type": "application/json;charset=utf-8"}, method="POST")
         try:
             with urllib.request.urlopen(request, timeout=self.get_parameter("http_timeout").value) as response:
@@ -62,7 +62,7 @@ class HttpTransmitter(Node):
             self.get_logger().warning("Invalid heartbeat HTTP response")
             return
         if self.has_null(data):
-            self.get_logger().warning("Heartbeat response contains null values")
+            self.get_logger().warning(f"Heartbeat response contains null values: {response}")
             return
         response_data = data.get("data", {})
         register_number = response_data.get("RegisterNumber")

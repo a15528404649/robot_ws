@@ -7,5 +7,5 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     return LaunchDescription([
         Node(package="yzz_transfer", executable="http_transmitter", name="http_transmitter", output="screen",
-             parameters=[PathJoinSubstitution([FindPackageShare("yzz_transfer"), "config", "yzz_transfer.yaml")]),
+             parameters=[PathJoinSubstitution([FindPackageShare("yzz_transfer"), "config", "yzz_transfer.yaml"])]),
     ])

@@ -61,7 +61,8 @@ class WebMappingNode(Node):
         )
         configured_waypoints_dir = self.get_parameter('waypoints_directory').value
         self._waypoints_dir = Path(configured_waypoints_dir) if configured_waypoints_dir else (
-            Path.home() / 'robot_ws' / 'data' / 'waypoints'
+            Path.home() / 'robot_ws' / 'src' / 'FuncPackage' /
+            'yzz_waypoint_nav' / 'data' / 'waypoints'
         )
 
         self._lock = threading.Lock()

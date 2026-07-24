@@ -80,11 +80,19 @@ source ~/robot_ws/install/setup.bash
 - 通过系统 V4L2/UVC 接口使用免驱 PTZ 相机，发布 `usb_cam/image_raw`，并提供 `/SetHolder`、`/GetHolder` 云台控制接口。
 - 虽归入功能包，仍依赖实际 `/dev/video*` 相机设备及其访问权限。
 
+### yzz_webrtc_streamer
+
+- 路径：`src/FuncPackage/yzz_webrtc_streamer`
+- ROS2 WHIP/WebRTC 推流功能包；默认订阅 PTZ 图像 `/usb_cam/image_raw`，可通过启动参数改为原 ROS1 虫情相机话题 `/usb_cam_2/image_raw_2`。
+- 监听 `/videostream_push_status`：`1` 启动推流，`0` 停止推流；空闲时不订阅图像、不连接公网。
+- 使用平台 WHIP 地址和现有设备注册码，运行依赖为 Ubuntu 包 `python3-aiortc`、`python3-av`。
+- 单独启动：`ros2 launch yzz_webrtc_streamer yzz_webrtc_streamer.launch.py`。
+
 ### yzz_waypoint_nav
 
 - 路径：`src/FuncPackage/yzz_waypoint_nav`
 - 运行在 Orin 上的 Nav2 多点巡航执行器；不直接发布 `/cmd_vel`，只逐点调用 Nav2 的 `navigate_to_pose` Action。
-- 航点路线属于地图，运行数据保存到 `~/robot_ws/data/waypoints/<地图名>/<路线名>.json`，不写入 ROS 包源码。
+- 航点路线按地图保存到 `~/robot_ws/src/FuncPackage/yzz_waypoint_nav/data/waypoints/<地图名>/<路线名>.json`，与多点导航功能包集中管理。
 - 保留 ROS1 巡逻参数：`rest_time`、`keep_patrol`、`random_patrol`、`patrol_type`、`patrol_loop`、`patrol_time`、`potrol_points_num`。其中 `potrol_points_num=0` 表示使用路线全部航点。
 - 由 `yzz_web_mapping` 启动；空闲时不会发导航目标。加载地图并设置初始位姿后，才可从网页开始巡逻。
 

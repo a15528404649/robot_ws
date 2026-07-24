@@ -27,6 +27,20 @@ class PtzCameraNode(Node):
         self.declare_parameter('pan_step', 18000)
         self.declare_parameter('tilt_step', 7200)
         self.declare_parameter('zoom_step', 100)
+        # Web remote-control values are angles in degrees.  The UVC PTZ
+        # controls use device-specific raw units, so map them to the actual
+        # V4L2 range before writing pan/tilt values.
+        self.declare_parameter('pan_command_degrees', 165.0)
+        self.declare_parameter('tilt_command_degrees', 90.0)
+        # The web joystick is normalized to roughly +/-220 rather than using
+        # the raw V4L2 range.  Keep movements gradual and calibratable.
+        self.declare_parameter('web_command_deadband', 2.0)
+        # Raw V4L2 units added for each received web joystick command.
+        # At the observed ~20 Hz callback rate, 8.0 gives a gentle response.
+        self.declare_parameter('web_pan_increment', 8.0)
+        self.declare_parameter('web_tilt_increment', 8.0)
+        self.declare_parameter('pan_direction', 1.0)
+        self.declare_parameter('tilt_direction', 1.0)
         self.declare_parameter('image_width', 320)
         self.declare_parameter('image_height', 240)
         self.declare_parameter('image_fps', 10.0)
@@ -106,10 +120,31 @@ class PtzCameraNode(Node):
         message.zoom_current = float(self.zoom)
         self.holder_pub.publish(message)
 
+    def apply_web_increment(self, name, command, increment, direction):
+        """Move relative to the current position; zero holds the position.
+
+        Browser joystick controls repeatedly publish a zero value on release.
+        Treating zero as an absolute target made the PTZ return to its centre.
+        """
+        deadband = float(self.get_parameter('web_command_deadband').value)
+        if abs(float(command)) <= deadband:
+            return None
+        current = self.pan if name == 'pan_absolute' else self.tilt
+        target = current + int(float(command) * increment * direction)
+        return self.set_ctrl_value(name, target)
+
     def set_holder_callback(self, message):
-        # Preserve the ROS 1 absolute-value semantics, including zoom * 10.
-        pan = self.set_ctrl_value('pan_absolute', message.angular_z)
-        tilt = self.set_ctrl_value('tilt_absolute', message.angular_y)
+        # Platform joystick calibration: web horizontal (angular_y) controls
+        # pan, web vertical (angular_z) controls tilt.  The values are relative
+        # joystick inputs, so release (zero) deliberately holds the PTZ still.
+        pan = self.apply_web_increment(
+            'pan_absolute', message.angular_y,
+            float(self.get_parameter('web_pan_increment').value),
+            float(self.get_parameter('pan_direction').value))
+        tilt = self.apply_web_increment(
+            'tilt_absolute', message.angular_z,
+            float(self.get_parameter('web_tilt_increment').value),
+            float(self.get_parameter('tilt_direction').value))
         zoom = self.set_ctrl_value('zoom_absolute', message.zoom * 10)
         if pan is not None:
             self.pan = pan

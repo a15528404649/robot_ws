@@ -1,0 +1,14 @@
+/**:
+  ros__parameters:
+    # PTZ is the default web video source.  Set this to /usb_cam_2/image_raw_2
+    # to keep the original ROS1 pest-camera stream selection.
+    image_topic: /usb_cam/image_raw
+    image_width: 640
+    image_height: 480
+    fps_max: 30.0
+    control_topic: /videostream_push_status
+
+    # Keep these aligned with yzz_transfer/yzz_control device identity.
+    whip_url_base: http://43.138.191.89:7208/rtc/v1/whip/?app=live&stream=
+    register_number: 016e3ee2-423f-4111-9d6c-9d14bdc2533c
+    request_timeout_sec: 30.0

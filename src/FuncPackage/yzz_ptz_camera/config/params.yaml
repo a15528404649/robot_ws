@@ -4,6 +4,13 @@ yzz_ptz_camera:
     pan_step: 18000
     tilt_step: 7200
     zoom_step: 100
+    pan_command_degrees: 165.0
+    tilt_command_degrees: 90.0
+    web_command_deadband: 2.0
+    web_pan_increment: 24.0
+    web_tilt_increment: 24.0
+    pan_direction: 1.0
+    tilt_direction: -1.0
     image_width: 320
     image_height: 240
     image_fps: 10.0

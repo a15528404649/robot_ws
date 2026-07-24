@@ -8,6 +8,6 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package="yzz_transfer", executable="heartbeat", name="heartbeat", output="screen",
-            parameters=[PathJoinSubstitution([FindPackageShare("yzz_transfer"), "config", "yzz_transfer.yaml")],
+            parameters=[PathJoinSubstitution([FindPackageShare("yzz_transfer"), "config", "yzz_transfer.yaml"])],
         ),
     ])

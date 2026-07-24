@@ -67,7 +67,7 @@ http://<Orin-IP>:8080
 4. 在“多点巡航”输入路线名称，例如 `daily_patrol`，点击“保存当前航点”。路线会保存到：
 
 ```text
-~/robot_ws/data/waypoints/<地图名>/<路线名>.json
+~/robot_ws/src/FuncPackage/yzz_waypoint_nav/data/waypoints/<地图名>/<路线名>.json
 ```
 
 5. 点击“开始巡逻”。Orin 的 `yzz_waypoint_nav` 节点会依次调用 Nav2；页面可显示当前巡逻状态和航点进度。

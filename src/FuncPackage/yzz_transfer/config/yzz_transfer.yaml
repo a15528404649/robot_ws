@@ -4,16 +4,16 @@
     freq_result_upload: 1.0
     freq_thdata_upload: 0.1
     data_threshold: 10
-    network_interface: wlan0
+    network_interface: wlP1p1s0
     ip_port: 43.138.191.89:7201
-    http_enabled: false
+    http_enabled: true
     http_timeout: 30.0
-    device.series_number: 未知
-    device.register_number: default_reg
-    device.type: 未知
-    device.model: 未知
-    device.name: 未知
-    device.battery_capacity: 未知
-    device.run_model: 未知
-    device.soft_version: 未知
-    device.StatusCode: 未知
+    device.series_number: YZZ-IARobot-5921a34f09d
+    device.register_number: 016e3ee2-423f-4111-9d6c-9d14bdc2533c
+    device.type: melodic
+    device.model: yzz001
+    device.name: 沃柑一号场
+    device.battery_capacity: 10Ah
+    device.run_model: normal
+    device.soft_version: CtrlApp-1.2.142,ubuntu-18.04,MBP-2.4.1242
+    device.StatusCode: "0"

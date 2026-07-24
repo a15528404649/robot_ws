@@ -13,7 +13,7 @@
 路线按地图隔离保存，位置为：
 
 ```text
-~/robot_ws/data/waypoints/<地图名>/<路线名>.json
+~/robot_ws/src/FuncPackage/yzz_waypoint_nav/data/waypoints/<地图名>/<路线名>.json
 ```
 
 每个航点包含 `x`、`y`、`yaw` 和显示名称。地图名和路线名仅允许字母、数字、`_`、`-`。
